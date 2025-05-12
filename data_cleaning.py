@@ -26,9 +26,6 @@ def clean_data():
     # Convert 'Amount' to numeric (with coercion to handle any invalid values)
     data['Amount'] = pd.to_numeric(data['Amount'], errors='coerce')
 
-    # Check for any NaN values in Amount
-    st.write(f"NaN values in Amount column: {data['Amount'].isna().sum()}")  # Display NaN count
-
     # Convert number columns to numeric (with coercion to handle invalid values)
     data['Remaining Balance'] = pd.to_numeric(data['Remaining Balance'], errors='coerce')
 
