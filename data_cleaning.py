@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Link to the file on GitHub
-github_url = 'https://raw.githubusercontent.com/MyraRoseJames/Semester-Project---Hope-Foundation/raw/refs/heads/main/NCSHF_Patient%20Assistance%20Dataset_Info%20for%20UNO%20SLA.xlsx'
+github_url = 'https://github.com/MyraRoseJames/Semester-Project---Hope-Foundation/raw/refs/heads/main/UNO%20Service%20Learning%20Data%20Sheet%20De-Identified%20Version.csv'
 
 # Load the data from GitHub
 data = pd.read_excel(github_url)
