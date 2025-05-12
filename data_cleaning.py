@@ -1,3 +1,5 @@
+import pandas as pd
+
 def clean_data():
     # Loading data from GitHub
     file_path = 'https://github.com/MyraRoseJames/Semester-Project---Hope-Foundation/raw/refs/heads/main/data.csv'
@@ -7,7 +9,12 @@ def clean_data():
     data.columns = data.columns.str.strip()
 
     # Replace 'Missing', 'Pending', 'Waiting on next statement', and blanks with NaN for all columns
-    data.replace({'Missing': pd.NA, 'Pending': pd.NA, 'Waiting on next statement': pd.NA, '': pd.NA}, inplace=True)
+    data.replace({
+        'Missing': pd.NA,
+        'Pending': pd.NA,
+        'Waiting on next statement': pd.NA,
+        '': pd.NA
+    }, inplace=True)
 
     # Normalize gender values
     data['Gender'] = data['Gender'].str.strip().str.lower()  # Convert to lowercase and remove extra spaces
@@ -16,9 +23,9 @@ def clean_data():
     gender_map = {
         'male': 'Male',
         'male ': 'Male',  # Handle any trailing spaces
-        'female': 'Female',
+        'female': 'Female'
     }
-
+    
     data['Gender'] = data['Gender'].map(gender_map).fillna(data['Gender'])  # Map and fill unrecognized values
 
     # Clean 'Amount' column: Remove commas, '$' signs, and convert to numeric
@@ -31,7 +38,7 @@ def clean_data():
     # Convert 'Grant Req Date' to datetime format (with coercion to handle invalid dates)
     data['Grant Req Date'] = pd.to_datetime(data['Grant Req Date'], errors='coerce')
 
-    # Handle 'Payment Submitted?' column: 
+    # Handle 'Payment Submitted?' column:
     # If 'Yes', set 1-day turnaround; else, coerce to datetime
     def process_payment_date(row):
         if row['Payment Submitted?'] == 'Yes':
@@ -54,7 +61,8 @@ def clean_data():
         # If 'Yes', return 1 day turnaround
         if payment_submitted == pd.Timedelta(days=1):
             return 1
-        return (payment_submitted - grant_req_date).days  # Calculate the days difference
+        # Calculate the days difference
+        return (payment_submitted - grant_req_date).days
 
     # Apply function to calculate time_to_support
     data['time_to_support'] = data.apply(calculate_time_to_support, axis=1)
