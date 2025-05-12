@@ -28,9 +28,16 @@ def clean_data():
     
     data['Gender'] = data['Gender'].map(gender_map).fillna(data['Gender'])  # Map and fill unrecognized values
 
-    # Clean 'Amount' column: Remove commas, '$' signs, and convert to numeric
-    data['Amount'] = data['Amount'].replace({'\$': '', ',': ''}, regex=True)  # Remove $ and commas
-    data['Amount'] = pd.to_numeric(data['Amount'], errors='coerce')  # Convert to numeric, coercing errors to NaN
+   # Create a clean numeric version of 'Amount' without overwriting original
+data['Amount_clean'] = data['Amount'].replace({
+    'Missing': pd.NA,
+    'Pending': pd.NA,
+    'Waiting on next statement': pd.NA,
+    '': pd.NA
+})
+data['Amount_clean'] = data['Amount_clean'].replace({'\$': '', ',': ''}, regex=True)
+data['Amount_clean'] = pd.to_numeric(data['Amount_clean'], errors='coerce')
+
 
     # Convert number columns to numeric (with coercion to handle invalid values)
     data['Remaining Balance'] = pd.to_numeric(data['Remaining Balance'], errors='coerce')
