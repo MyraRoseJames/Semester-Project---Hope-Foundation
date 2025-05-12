@@ -33,8 +33,7 @@ def clean_data():
     # Convert 'Grant Req Date' to datetime format (with coercion to handle invalid dates)
     data['Grant Req Date'] = pd.to_datetime(data['Grant Req Date'], errors='coerce')
 
-    # Handle 'Payment Submitted?' column: 
-    # If 'Yes', set 1-day turnaround; else, coerce to datetime
+    # Handle 'Payment Submitted?' column: We won't modify the original column, but we need to handle it temporarily
     def process_payment_date(row):
         if row['Payment Submitted?'] == 'Yes':
             return pd.Timedelta(days=1)  # If 'Yes', treat as 1-day turnaround
@@ -42,21 +41,23 @@ def clean_data():
             return pd.NA  # If 'No' or NaN, return NaT (Not a Time)
         return pd.to_datetime(row['Payment Submitted?'], errors='coerce')  # For dates, convert normally
 
-    data['Payment Submitted?'] = data.apply(process_payment_date, axis=1)
+    # Create a temporary column for calculations (don't modify the original 'Payment Submitted?' column)
+    data['temp_payment_submitted'] = data['Payment Submitted?'].apply(process_payment_date)
 
     # Now calculate the time to provide support in days
     def calculate_time_to_support(row):
         # Ensure both columns are datetime before calculation
         grant_req_date = pd.to_datetime(row['Grant Req Date'], errors='coerce')
-        payment_submitted = pd.to_datetime(row['Payment Submitted?'], errors='coerce')
+        payment_submitted = row['temp_payment_submitted']  # Use the temporary column for time calculation
 
         # If payment is missing or 'No', return NaT
-        if pd.isna(payment_submitted) or payment_submitted == pd.NaT:
-            return pd.NA
+        if pd.isna(payment_submitted):
+            return pd.NaT
         # If 'Yes', return 1 day turnaround
         if payment_submitted == pd.Timedelta(days=1):
             return 1
-        return (payment_submitted - grant_req_date).days  # Calculate the days difference
+        # Calculate the days difference
+        return (payment_submitted - grant_req_date).days
 
     # Apply function to calculate time_to_support
     data['time_to_support'] = data.apply(calculate_time_to_support, axis=1)
