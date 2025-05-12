@@ -70,10 +70,19 @@ elif page == "Time to Provide Support":
     # Display the average time
     st.write(f"Average time to provide support: {avg_time:.2f} days")
 
-elif page == "Unused Grant Amounts":
-    st.title("Unused Grant Amounts")
-    # Assuming there's a column 'Amount' and 'Remaining Balance'
+elif page == "Unused Grants and Assistance Breakdown":
+    st.title("Unused Grants and Assistance Breakdown")
+
+    # Filter rows where the grant was not fully used (Amount > Remaining Balance)
     unused_grants = cleaned_data[cleaned_data['Amount'] > cleaned_data['Remaining Balance']]
-    avg_unused = unused_grants['Amount'] - unused_grants['Remaining Balance']
-    st.write(f"Total unused grants: {unused_grants.shape[0]}")
-    st.write(f"Average unused amount: {avg_unused.mean()}")
+
+    # How many patients did not use their full grant amount in the given year
+    unused_grant_patients = unused_grants.shape[0]  # Count the number of rows (patients)
+
+    # Calculate the average amount given by Assistance Type (assistance type column assumed to be 'Type of Assistance (CLASS)')
+    average_amount_by_assistance = cleaned_data.groupby('Type of Assistance (CLASS)')['Amount'].mean()
+
+    # Display the results
+    st.write(f"Number of patients who did not use their full grant amount: {unused_grant_patients}")
+    st.write("Average amounts given by assistance type:")
+    st.write(average_amount_by_assistance)
