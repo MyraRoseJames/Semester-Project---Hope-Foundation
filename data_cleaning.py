@@ -8,8 +8,8 @@ def clean_data():
     # Strip extra spaces from column names
     data.columns = data.columns.str.strip()
 
-    # Replace 'Missing' and empty strings with NaN for all columns
-    data.replace({'Missing': pd.NA, '': pd.NA}, inplace=True)
+    # Replace 'Missing', 'Pending', 'Waiting on next statement', and blanks with NaN for all columns
+    data.replace({'Missing': pd.NA, 'Pending': pd.NA, 'Waiting on next statement': pd.NA, '': pd.NA}, inplace=True)
 
     # Normalize gender values
     data['Gender'] = data['Gender'].str.strip().str.lower()  # Convert to lowercase and remove extra spaces
@@ -23,8 +23,9 @@ def clean_data():
 
     data['Gender'] = data['Gender'].map(gender_map).fillna(data['Gender'])  # Map and fill unrecognized values
 
-    # Convert 'Amount' to numeric (with coercion to handle any invalid values)
-    data['Amount'] = pd.to_numeric(data['Amount'], errors='coerce')
+    # Clean 'Amount' column: Remove commas, '$' signs, and convert to numeric
+    data['Amount'] = data['Amount'].replace({'\$': '', ',': ''}, regex=True)  # Remove $ and commas
+    data['Amount'] = pd.to_numeric(data['Amount'], errors='coerce')  # Convert to numeric, coercing errors to NaN
 
     # Convert number columns to numeric (with coercion to handle invalid values)
     data['Remaining Balance'] = pd.to_numeric(data['Remaining Balance'], errors='coerce')
