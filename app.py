@@ -15,6 +15,15 @@ if page == "Data Preview":
     st.header("Data Preview")
     st.write(cleaned_data.head())  # Show the cleaned data
 
+elif page == "Data Information":
+    st.title("Data Information")
+    st.subheader("Detailed Data Info")
+    st.write("This section shows the data types and number of non-null values.")
+    # Show data info with more detailed information about column types
+    st.write(cleaned_data.info(verbose=True))  # Show more detailed info
+    st.write("Data Types per Column:")
+    st.write(cleaned_data.dtypes)  # Show data types for each column
+
 elif page == "Applications Ready for Review":
     st.title("Applications Ready for Review")
     # Assuming a column called 'signed' to filter applications (True or False)
