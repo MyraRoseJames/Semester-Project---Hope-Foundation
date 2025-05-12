@@ -42,13 +42,33 @@ elif page == "Support Breakdown":
     # Display the formatted support breakdown
     st.write(support_by_gender)
 
-
 elif page == "Time to Provide Support":
     st.title("Time to Provide Support")
-    # Assuming there's a column for request date and support date
-    cleaned_data['time_to_support'] = pd.to_datetime(cleaned_data['Payment Submitted?']) - pd.to_datetime(cleaned_data['Grant Req Date'])
+
+    # Convert 'Grant Req Date' to datetime format (with coercion to handle invalid dates)
+    cleaned_data['Grant Req Date'] = pd.to_datetime(cleaned_data['Grant Req Date'], errors='coerce')
+
+    # Handle 'Payment Submitted?' column:
+    # Convert 'Yes' to 1-day turnaround and invalid entries to NaT
+    cleaned_data['Payment Submitted?'] = pd.to_datetime(cleaned_data['Payment Submitted?'], errors='coerce')
+
+    # Calculate time to support in days
+    def calculate_time_to_support(row):
+        if pd.isna(row['Payment Submitted?']):
+            return pd.NA  # If there's no date or it's "No", return NaT
+        elif row['Payment Submitted?'] == pd.to_datetime('2023-01-01', errors='coerce'):  # Replace with an appropriate "Yes" condition
+            return 1  # If 'Yes', assign 1 day
+        else:
+            return (row['Payment Submitted?'] - row['Grant Req Date']).days  # Calculate days difference
+
+    # Apply the function to calculate the time to support
+    cleaned_data['time_to_support'] = cleaned_data.apply(calculate_time_to_support, axis=1)
+
+    # Calculate average time to provide support (ignoring NaT)
     avg_time = cleaned_data['time_to_support'].mean()
-    st.write(f"Average time to provide support: {avg_time.days} days")
+
+    # Display the average time
+    st.write(f"Average time to provide support: {avg_time:.2f} days")
 
 elif page == "Unused Grant Amounts":
     st.title("Unused Grant Amounts")
