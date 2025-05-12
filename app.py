@@ -32,12 +32,6 @@ elif page == "Applications Ready for Review":
 
 elif page == "Support Breakdown":
     st.title("Support Breakdown by Demographics")
-    # You can modify this part to show breakdowns like gender, location, etc.
-    support_by_gender = cleaned_data.groupby('Gender')['Amount'].sum()
-    st.write(support_by_gender)
-    
-if page == "Support Breakdown":
-    st.title("Support Breakdown by Demographics")
 
     # Group by 'Gender' and calculate the total 'Amount'
     support_by_gender = cleaned_data.groupby('Gender')['Amount'].sum()
@@ -45,7 +39,9 @@ if page == "Support Breakdown":
     # Format the 'Amount' to include commas and dollar signs
     support_by_gender = support_by_gender.apply(lambda x: f"${x:,.2f}")  # Format with commas and dollar sign
 
-    st.write(support_by_gender)  # Display the formatted result
+    # Display the formatted support breakdown
+    st.write(support_by_gender)
+
 
 elif page == "Time to Provide Support":
     st.title("Time to Provide Support")
