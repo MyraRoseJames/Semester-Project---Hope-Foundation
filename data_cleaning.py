@@ -16,6 +16,9 @@ def clean_data():
     data['Grant Req Date'] = pd.to_datetime(data['Grant Req Date'], errors='coerce') 
     data['Payment Submitted?'] = pd.to_datetime(data['Payment Submitted?'], errors='coerce')
 
+      # Convert 'Amount' to numeric (with coercion to handle any invalid values)
+    data['Amount'] = pd.to_numeric(data['Amount'], errors='coerce')
+
     # Convert number columns to numeric (with coercion to handle invalid values)
     data['Remaining Balance'] = pd.to_numeric(data['Remaining Balance'], errors='coerce')
     data['Amount'] = pd.to_numeric(data['Amount'], errors='coerce')
