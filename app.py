@@ -6,7 +6,7 @@ cleaned_data = clean_data()
 
 # Sidebar navigation
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Select a page:", ["Data Preview", "Applications Ready for Review", "Support Breakdown", "Time to Provide Support", "Unused Grants and Assistance Breakdown"])
+page = st.sidebar.radio("Select a page:", ["Data Preview", "Applications Ready for Review", "Support Breakdown", "Time to Provide Support", "Unused Grant Amounts"])
 
 # Display the page based on selection
 if page == "Data Preview":
@@ -83,8 +83,30 @@ elif page == "Time to Provide Support":
     # Display the average time
     st.write(f"Average time to provide support: {avg_time:.2f} days")
 
-elif page == "Unused Grants and Assistance Breakdown":
-    st.title("Unused Grants and Assistance Breakdown")
+elif page == "Unused Grant Amounts":
+    st.title("Unused Grant Amounts")
+
+    # Drop rows where either field is missing
+    unused_data = cleaned_data.dropna(subset=["Amount", "Remaining Balance"])
+
+    # Filter where remaining balance > 0
+    unused_grants = unused_data[unused_data["Remaining Balance"] > 0]
+
+    # Calculate number and percent
+    num_unused = len(unused_grants)
+    total = len(unused_data)
+    percent_unused = (num_unused / total) * 100 if total > 0 else 0
+
+    st.metric("Total Applications with Unused Grants", f"{num_unused}")
+    st.metric("Percentage of Grants Unused", f"{percent_unused:.2f}%")
+
+    # Average remaining balance
+    avg_remaining = unused_grants["Remaining Balance"].mean()
+    st.metric("Average Remaining Balance", f"${avg_remaining:,.2f}")
+
+    st.subheader("Details of Unused Grants")
+    st.dataframe(unused_grants[["Amount", "Remaining Balance", "Gender", "City", "Insurance Type"]])
+
 
 elif page == "Time to Provide Support":
     st.title("Time to Provide Support")
