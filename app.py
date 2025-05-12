@@ -45,23 +45,36 @@ elif page == "Support Breakdown":
 elif page == "Time to Provide Support":
     st.title("Time to Provide Support")
 
-    # Convert 'Grant Req Date' to datetime format (with coercion to handle invalid dates)
+    # Create a temporary copy of 'Payment Submitted?' column for time calculations
+    cleaned_data['temp_payment_submitted'] = cleaned_data['Payment Submitted?']
+
+    # Convert 'Grant Req Date' and 'temp_payment_submitted' to datetime (coerce invalid dates to NaT)
     cleaned_data['Grant Req Date'] = pd.to_datetime(cleaned_data['Grant Req Date'], errors='coerce')
+    cleaned_data['temp_payment_submitted'] = pd.to_datetime(cleaned_data['temp_payment_submitted'], errors='coerce')
 
-    # Handle 'Payment Submitted?' column:
-    # Convert 'Yes' to 1-day turnaround and invalid entries to NaT
-    cleaned_data['Payment Submitted?'] = pd.to_datetime(cleaned_data['Payment Submitted?'], errors='coerce')
+    # Handle 'temp_payment_submitted' column: 'Yes' = 1-day turnaround, else NaT for invalid entries
+    def process_payment_date(row):
+        if row['temp_payment_submitted'] == 'Yes':
+            return pd.Timedelta(days=1)  # If 'Yes', treat as 1-day turnaround
+        if row['temp_payment_submitted'] == 'No' or pd.isna(row['temp_payment_submitted']):
+            return pd.NA  # If 'No' or NaN, return NaT (Not a Time)
+        return row['temp_payment_submitted']  # For valid dates, return as is
 
-    # Calculate time to support in days
+    # Apply the processing logic to the 'temp_payment_submitted' column
+    cleaned_data['temp_payment_submitted'] = cleaned_data.apply(process_payment_date, axis=1)
+
+    # Now calculate the time to provide support in days
     def calculate_time_to_support(row):
-        if pd.isna(row['Payment Submitted?']):
-            return pd.NA  # If there's no date or it's "No", return NaT
-        elif row['Payment Submitted?'] == pd.to_datetime('2023-01-01', errors='coerce'):  # Replace with an appropriate "Yes" condition
-            return 1  # If 'Yes', assign 1 day
-        else:
-            return (row['Payment Submitted?'] - row['Grant Req Date']).days  # Calculate days difference
+        # If 'temp_payment_submitted' is NaT or 'No', return NaT
+        if pd.isna(row['temp_payment_submitted']):
+            return pd.NaT
+        # If 'Yes', return 1 day turnaround
+        if row['temp_payment_submitted'] == pd.Timedelta(days=1):
+            return 1
+        # Calculate the days difference
+        return (row['temp_payment_submitted'] - row['Grant Req Date']).days
 
-    # Apply the function to calculate the time to support
+    # Apply the time calculation
     cleaned_data['time_to_support'] = cleaned_data.apply(calculate_time_to_support, axis=1)
 
     # Calculate average time to provide support (ignoring NaT)
