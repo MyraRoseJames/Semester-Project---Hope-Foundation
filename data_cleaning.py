@@ -1,3 +1,4 @@
+import pandas as pd
 def clean_data():
     # Loading data from GitHub
     file_path = 'https://github.com/MyraRoseJames/Semester-Project---Hope-Foundation/raw/refs/heads/main/data.csv'
