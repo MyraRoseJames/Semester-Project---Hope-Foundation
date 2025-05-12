@@ -1,7 +1,7 @@
 import pandas as pd
 
 # Loading data from Github
-file_path = 'https://github.com/MyraRoseJames/Semester-Project---Hope-Foundation/raw/refs/heads/main/NCSHF_Patient%20Assistance%20Dataset_Info%20for%20UNO%20SLA.xlsx'
+file_path = 'https://github.com/MyraRoseJames/Semester-Project---Hope-Foundation/raw/refs/heads/main/data.csv'
 data = pd.read_excel(file_path)
 
 # decided to replace both missing and blanks with NaN for all columns
