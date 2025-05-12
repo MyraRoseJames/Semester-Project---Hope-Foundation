@@ -33,7 +33,7 @@ elif page == "Applications Ready for Review":
 elif page == "Support Breakdown":
     st.title("Support Breakdown by Demographics")
     # You can modify this part to show breakdowns like gender, location, etc.
-    support_by_gender = cleaned_data.groupby('Gender')['support_amount'].sum()
+    support_by_gender = cleaned_data.groupby('Gender')['Amount'].sum()
     st.write(support_by_gender)
 
 elif page == "Time to Provide Support":
