@@ -27,7 +27,7 @@ elif page == "Data Information":
 elif page == "Applications Ready for Review":
     st.title("Applications Ready for Review")
     # Assuming a column called 'signed' to filter applications (True or False)
-    ready_for_review = cleaned_data[cleaned_data['signed'] == True]
+    ready_for_review = cleaned_data[cleaned_data['Application Signed?'] == 'Yes']
     st.write(ready_for_review)
 
 elif page == "Support Breakdown":
