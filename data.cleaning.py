@@ -2,7 +2,7 @@ import pandas as pd
 
 # Loading data from Github
 file_path = 'https://github.com/MyraRoseJames/Semester-Project---Hope-Foundation/raw/refs/heads/main/data.csv'
-data = pd.read_excel(file_path)
+data = pd.read_csv(file_path)
 
 # decided to replace both missing and blanks with NaN for all columns
 data.replace('Missing', pd.NA, inplace=True)
