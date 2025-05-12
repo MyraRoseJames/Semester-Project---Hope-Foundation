@@ -30,5 +30,18 @@ def clean_data():
     # Convert number columns to numeric (with coercion to handle invalid values)
     data['Remaining Balance'] = pd.to_numeric(data['Remaining Balance'], errors='coerce')
 
+    # Convert 'Grant Req Date' to datetime format (with coercion to handle invalid dates)
+    data['Grant Req Date'] = pd.to_datetime(data['Grant Req Date'], errors='coerce')
+
+    # Handle 'Payment Submitted?' column: 'Yes' = 1 day turnaround, else NaT for invalid dates
+    data['Payment Submitted?'] = pd.to_datetime(data['Payment Submitted?'], errors='coerce')
+
+    # Calculate time to support: 
+    # If 'Payment Submitted?' is 'Yes', use 1 day turnaround; otherwise, calculate the actual date difference
+    data['time_to_support'] = data.apply(
+        lambda row: 1 if row['Payment Submitted?'] == 'Yes' else (row['Payment Submitted?'] - row['Grant Req Date']).days,
+        axis=1
+    )
+
     # Return cleaned data
     return data
