@@ -1,17 +1,24 @@
 import pandas as pd
 
-# Link to the file on GitHub
-github_url = 'https://github.com/MyraRoseJames/Semester-Project---Hope-Foundation/raw/refs/heads/main/UNO%20Service%20Learning%20Data%20Sheet%20De-Identified%20Version.csv'
+# Loading data from Github
+file_path = 'https://github.com/MyraRoseJames/Semester-Project---Hope-Foundation/raw/refs/heads/main/NCSHF_Patient%20Assistance%20Dataset_Info%20for%20UNO%20SLA.xlsx'
+data = pd.read_excel(file_path)
 
-# Load the data from GitHub
-data = pd.read_excel(github_url)
+# decided to replace both missing and blanks with NaN for all columns
+data.replace('Missing', pd.NA, inplace=True)
+data.replace('', pd.NA, inplace=True)
 
-# Clean the data by removing rows with missing cities or states
-data.dropna(subset=['Pt City', 'Pt State'], how='any', inplace=True)
+# Convert the two columns with dates to date time format
+# coerce needed to onvert date columns, set invalid data to NaT
+data['Grant Req Date'] = pd.to_datetime(data['Grant Req Date'], errors='coerce') 
+data['Payment Submitted?'] = pd.to_datetime(data['Payment Submitted?'], errors='coerce')
 
-# Convert necessary columns to numeric values
+# Remove rows where there is missing city and state, or city or state WILL PROBABLY NOT DO THIS DEPENDING ON HOW MANY
+#data.dropna(subset=['Pt City', 'Pt State'], how='any', inplace=True)
+
+#number consistancy
 data['Remaining Balance'] = pd.to_numeric(data['Remaining Balance'], errors='coerce')
 data['Amount'] = pd.to_numeric(data['Amount'], errors='coerce')
 
-# Show the cleaned data
-print(data.head())
+# After cleaning, inspect the first few rows to ensure the changes were applied correctly
+data.head()
