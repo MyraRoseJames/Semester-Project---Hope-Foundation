@@ -72,3 +72,6 @@ elif page == "Time to Provide Support":
 
 elif page == "Unused Grants and Assistance Breakdown":
     st.title("Unused Grants and Assistance Breakdown")
+
+elif page == "Time to Provide Support":
+    st.title("Time to Provide Support")
