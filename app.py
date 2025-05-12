@@ -6,7 +6,7 @@ cleaned_data = clean_data()
 
 # Sidebar navigation
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Select a page:", ["Data Preview", "Applications Ready for Review", "Support Breakdown", "Time to Provide Support", "Unused Grant and Assistance Breakdown"])
+page = st.sidebar.radio("Select a page:", ["Data Preview", "Applications Ready for Review", "Support Breakdown", "Time to Provide Support", "Unused Grants and Assistance Breakdown"])
 
 # Display the page based on selection
 if page == "Data Preview":
