@@ -33,7 +33,9 @@ def clean_data():
         data.drop(data.columns[[30, 31]], axis=1, inplace=True)
 
     if 'Pt City' in data.columns:
-        data['Pt City'] = data['Pt City'].astype(str).str.strip().str.title()
+        # Keep missing values as NaN instead of converting to string 'nan'
+        data['Pt City'] = data['Pt City'].where(data['Pt City'].notna())
+        data['Pt City'] = data['Pt City'].str.strip().str.title()
     
     city_corrections = {
         'Omahaa': 'Omaha',
