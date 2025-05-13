@@ -57,9 +57,25 @@ def clean_data():
     # Convert date fields
     data['Grant Req Date'] = pd.to_datetime(data['Grant Req Date'], errors='coerce')
 
-    # Process payment dates and calculate support time
-    data['Payment Submitted?'] = data.apply(process_payment_date, axis=1)
-    data['time_to_support'] = data.apply(calculate_time_to_support, axis=1)
+    # Create a new temporary column with parsed dates for calculation
+    data['_parsed_payment_date'] = data.apply(process_payment_date, axis=1)
+
+    # Use the parsed date to compute days to support
+    def calculate_days_to_support(row):
+        grant_req_date = row['Grant Req Date']
+        parsed_payment = row['_parsed_payment_date']
+
+    if pd.isna(parsed_payment):
+        return pd.NA
+    if parsed_payment == pd.Timedelta(days=1):
+        return 1
+    return (parsed_payment - grant_req_date).days
+
+data['days_to_support'] = data.apply(calculate_days_to_support, axis=1)
+
+# Drop the temporary column
+data.drop(columns=['_parsed_payment_date'], inplace=True)
+
 
      # Save cleaned data
     data.to_csv('cleaned_data.csv', index=False)
