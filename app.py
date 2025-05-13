@@ -87,28 +87,28 @@ elif page == "Time to Provide Support":
 elif page == "Unused Grant Amounts":
     st.title("Unused Grant Amounts")
 
-    # Drop rows with missing values in the relevant fields
-    unused_data = cleaned_data.dropna(subset=[" Amount ", " Remaining Balance "])
+    # Drop rows with missing values in Amount or Remaining Balance
+    unused_data = cleaned_data.dropna(subset=["Amount", "Remaining Balance"])
 
-    # Filter to only those with a remaining balance > 0
-    unused_grants = unused_data[unused_data[" Remaining Balance "] > 0]
+    # Filter where Remaining Balance > 0
+    unused_grants = unused_data[unused_data["Remaining Balance"] > 0]
 
-    # Count and calculate percentage
+    # Count and percentage
     num_unused = len(unused_grants)
     total = len(unused_data)
     percent_unused = (num_unused / total) * 100 if total > 0 else 0
 
-    # Calculate average remaining balance
-    avg_remaining = unused_grants[" Remaining Balance "].mean()
+    # Average remaining
+    avg_remaining = unused_grants["Remaining Balance"].mean()
 
     # Display metrics
     st.metric("Total Applications with Unused Grants", f"{num_unused}")
     st.metric("Percentage of Grants Unused", f"{percent_unused:.2f}%")
     st.metric("Average Remaining Balance", f"${avg_remaining:,.2f}")
 
-    # Display data table
+    # Show details
     st.subheader("Details of Unused Grants")
-    st.dataframe(unused_grants[[" Amount ", " Remaining Balance ", "Gender", "Pt City", "Insurance Type"]])
+    st.dataframe(unused_grants[["Amount", "Remaining Balance", "Gender", "Pt City", "Insurance Type"]])
 
 elif page == "Summary of Impact and Progress":
     st.title("Summary of Impact and Progress")
