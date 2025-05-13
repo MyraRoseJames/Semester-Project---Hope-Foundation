@@ -60,8 +60,8 @@ def clean_data():
      # Save cleaned data
     data.to_csv('cleaned_data.csv', index=False)
 
-    return data  # ✅ This is INSIDE the function
+    return data
 
 # Run the cleaning when the file is executed directly
 if __name__ == "__main__":
-    clean_data()  # ✅ No return statement needed here
+    clean_data()  
