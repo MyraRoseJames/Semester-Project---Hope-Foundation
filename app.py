@@ -112,3 +112,40 @@ elif page == "Unused Grant Amounts":
 
 elif page == "Summary of Impact and Progress":
     st.title("Summary of Impact and Progress")
+    st.subheader("Key Insights from the Past Year")
+
+    # Total number of applications
+    total_apps = len(cleaned_data)
+
+    # Total amount distributed
+    total_distributed = cleaned_data["Amount"].sum()
+
+    # Average amount awarded (non-null values only)
+    avg_award = cleaned_data["Amount"].mean()
+
+    # Average time to provide support (calculated in your data_cleaning.py)
+    avg_support_time = cleaned_data["time_to_support"].mean()
+
+    # Number of unique cities served
+    num_cities = cleaned_data["Pt City"].nunique()
+
+    # Metrics row
+    col1, col2, col3 = st.columns(3)
+    col1.metric("Total Applications", f"{total_apps}")
+    col2.metric("Total Amount Distributed", f"${total_distributed:,.2f}")
+    col3.metric("Average Award Amount", f"${avg_award:,.2f}")
+
+    col4, col5 = st.columns(2)
+    col4.metric("Avg. Days to Support", f"{avg_support_time:.2f} days" if avg_support_time else "N/A")
+    col5.metric("Cities Served", f"{num_cities}")
+
+    # Optional: Gender breakdown
+    st.subheader("Support by Gender")
+    gender_counts = cleaned_data["Gender"].value_counts(dropna=False)
+    st.bar_chart(gender_counts)
+
+    # Optional: Top cities served
+    st.subheader("Top 5 Cities by Number of Applications")
+    top_cities = cleaned_data["Pt City"].value_counts().head(5)
+    st.bar_chart(top_cities)
+
