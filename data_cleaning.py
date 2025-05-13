@@ -33,7 +33,16 @@ def clean_data():
         data.drop(data.columns[[30, 31]], axis=1, inplace=True)
 
     if 'Pt City' in data.columns:
-        data['Pt City'] = data['Pt City'].str.strip().str.title()
+        data['Pt City'] = data['Pt City'].astype(str).str.strip().str.title()
+    city_corrections = {
+    'Omahaa': 'Omaha',
+    'Omha': 'Omaha',
+    'OmAha': 'Omaha',
+    'O maha': 'Omaha',
+    'Lincon': 'Lincoln',
+}
+
+data['Pt City'] = data['Pt City'].replace(city_corrections)
 
     # Replace non-informative entries with NaN
     data.replace({
