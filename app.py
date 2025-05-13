@@ -7,7 +7,7 @@ cleaned_data = clean_data()
 
 # Sidebar navigation
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Select a page:", ["Data Preview", "Applications Ready for Review", "Support Breakdown", "Time to Provide Support", "Unused Grant Amounts"])
+page = st.sidebar.radio("Select a page:", ["Data Preview", "Applications Ready for Review", "Support Breakdown", "Time to Provide Support", "Unused Grant Amounts", "Summary of Impact and Progress"])
 
 # Display the page based on selection
 if page == "Data Preview":
@@ -107,3 +107,6 @@ elif page == "Unused Grant Amounts":
 
     st.subheader("Details of Unused Grants")
     st.dataframe(unused_grants[["Amount", "Remaining Balance", "Gender", "City", "Insurance Type"]])
+
+elif page == "Summary of Impact and Progress":
+    st.title("Summary of Impact and Progress")
