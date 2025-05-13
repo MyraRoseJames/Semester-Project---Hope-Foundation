@@ -61,46 +61,49 @@ elif page == "Support Breakdown":
     # Display the formatted support breakdown
     st.write(support_by_gender)
 
+import plotly.express as px
+
 elif page == "Time to Provide Support":
     st.title("Time to Provide Support")
 
-    # Create a temporary copy of 'Payment Submitted?' column for time calculations
-    cleaned_data['temp_payment_submitted'] = cleaned_data['Payment Submitted?']
+    # Filter for rows with valid support times and request dates
+    support_data = cleaned_data.dropna(subset=['days_to_support', 'Grant Req Date'])
 
-    # Convert 'Grant Req Date' and 'temp_payment_submitted' to datetime (coerce invalid dates to NaT)
-    cleaned_data['Grant Req Date'] = pd.to_datetime(cleaned_data['Grant Req Date'], errors='coerce')
-    cleaned_data['temp_payment_submitted'] = pd.to_datetime(cleaned_data['temp_payment_submitted'], errors='coerce')
+    # Extract year and month from the grant request date
+    support_data['Request Year'] = support_data['Grant Req Date'].dt.year
+    support_data['Request Month'] = support_data['Grant Req Date'].dt.strftime('%Y-%m')
 
-    # Handle 'temp_payment_submitted' column: 'Yes' = 1-day turnaround, else NaT for invalid entries
-    def process_payment_date(row):
-        if row['temp_payment_submitted'] == 'Yes':
-            return pd.Timedelta(days=1)  # If 'Yes', treat as 1-day turnaround
-        if row['temp_payment_submitted'] == 'No' or pd.isna(row['temp_payment_submitted']):
-            return pd.NA  # If 'No' or NaN, return NaT (Not a Time)
-        return row['temp_payment_submitted']  # For valid dates, return as is
+    # Overall average support time
+    avg_time = support_data['days_to_support'].mean()
+    st.metric("Average Time to Provide Support", f"{avg_time:.2f} days")
 
-    # Apply the processing logic to the 'temp_payment_submitted' column
-    cleaned_data['temp_payment_submitted'] = cleaned_data.apply(process_payment_date, axis=1)
+    # Group by year
+    avg_by_year = support_data.groupby('Request Year')['days_to_support'].mean().reset_index()
 
-    # Now calculate the time to provide support in days
-    def calculate_days_to_support(row):
-        # If 'temp_payment_submitted' is NaT or 'No', return NaT
-        if pd.isna(row['temp_payment_submitted']):
-            return pd.NaT
-        # If 'Yes', return 1 day turnaround
-        if row['temp_payment_submitted'] == pd.Timedelta(days=1):
-            return 1
-        # Calculate the days difference
-        return (row['temp_payment_submitted'] - row['Grant Req Date']).days
+    # Group by month
+    avg_by_month = support_data.groupby('Request Month')['days_to_support'].mean().reset_index()
 
-    # Apply the time calculation
-    cleaned_data['days_to_support'] = cleaned_data.apply(calculate_days_to_support, axis=1)
+    # Plot: Yearly average
+    fig_year = px.line(
+        avg_by_year,
+        x='Request Year',
+        y='days_to_support',
+        title='Average Time to Provide Support by Year',
+        markers=True,
+        labels={'days_to_support': 'Avg Days to Support'}
+    )
+    st.plotly_chart(fig_year, use_container_width=True)
 
-    # Calculate average time to provide support (ignoring NaT)
-    avg_time = cleaned_data['days_to_support'].mean()
-
-    # Display the average time
-    st.write(f"Average time to provide support: {avg_time:.2f} days")
+    # Plot: Monthly average
+    fig_month = px.line(
+        avg_by_month,
+        x='Request Month',
+        y='days_to_support',
+        title='Average Time to Provide Support by Month',
+        markers=True,
+        labels={'days_to_support': 'Avg Days to Support'}
+    )
+    st.plotly_chart(fig_month, use_container_width=True)
 
 elif page == "Unused Grant Amounts":
     st.title("Unused Grant Amounts")
