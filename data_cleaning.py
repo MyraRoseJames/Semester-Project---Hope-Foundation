@@ -30,6 +30,34 @@ def clean_data():
     # Clean column names
     data.columns = data.columns.str.strip()
 
+    # Clean and bin 'Total Household Gross Monthly Income'
+if 'Total Household Gross Monthly Income' in data.columns:
+    # Convert to numeric
+    data['Total Household Gross Monthly Income'] = (
+        data['Total Household Gross Monthly Income']
+        .replace('[\$,]', '', regex=True)
+        .replace('', pd.NA)
+    )
+    data['Total Household Gross Monthly Income'] = pd.to_numeric(
+        data['Total Household Gross Monthly Income'], errors='coerce'
+    )
+
+    # Define income bins and labels
+    income_bins = [0, 2000, 4000, 6000, 8000, float('inf')]
+    income_labels = ['< $2,000', '$2,000–3,999', '$4,000–5,999', '$6,000–7,999', '$8,000+']
+
+    # Bin numeric values into ranges
+    data['Income Range'] = pd.cut(
+        data['Total Household Gross Monthly Income'],
+        bins=income_bins,
+        labels=income_labels
+    )
+
+    # Add 'Missing' as a category for NaN values
+    data['Income Range'] = data['Income Range'].astype(object)
+    data.loc[data['Total Household Gross Monthly Income'].isna(), 'Income Range'] = 'Missing'
+
+
     # Calculate Age from DOB
     if 'DOB' in data.columns:
         data['DOB'] = pd.to_datetime(data['DOB'], errors='coerce')
