@@ -107,7 +107,3 @@ elif page == "Unused Grant Amounts":
 
     st.subheader("Details of Unused Grants")
     st.dataframe(unused_grants[["Amount", "Remaining Balance", "Gender", "City", "Insurance Type"]])
-
-
-elif page == "Time to Provide Support":
-    st.title("Time to Provide Support")
