@@ -1,5 +1,7 @@
 import pandas as pd
 
+from datetime import datetime
+
 # Helper function: handle Payment Submitted? values
 def process_payment_date(row):
     if row['Payment Submitted?'] == 'Yes':
@@ -27,6 +29,13 @@ def clean_data():
 
     # Clean column names
     data.columns = data.columns.str.strip()
+
+    # Calculate Age from DOB
+    if 'DOB' in data.columns:
+        data['DOB'] = pd.to_datetime(data['DOB'], errors='coerce')
+        today = pd.to_datetime(datetime.today().date())
+        data['Age'] = (today - data['DOB']).dt.days // 365
+
 
     # Drop empty columns 30 and 31 if they exist
     if data.shape[1] > 31:
