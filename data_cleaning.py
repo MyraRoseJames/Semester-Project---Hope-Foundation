@@ -30,6 +30,28 @@ def clean_data():
     # Clean column names
     data.columns = data.columns.str.strip()
 
+    # Clean and standardize Insurance Type
+    if 'Insurance Type' in data.columns:
+        data['Insurance Type'] = data['Insurance Type'].astype(str).str.strip().str.title()
+    
+        insurance_corrections = {
+            'Uninsurred': 'Uninsured',
+            'Unisured': 'Uninsured',
+            'Medicaid & Medicare': 'Medicare & Medicaid',
+            'MediCare': 'Medicare',
+            'MEdicare': 'Medicare',
+            'Medicaid ': 'Medicaid',
+            'Medicare ': 'Medicare',
+            'Private ': 'Private',
+            'Uninsured ': 'Uninsured',
+            'Healthcare.Gov': 'Healthcare.gov',
+            'Heathcare.Gov': 'Healthcare.gov',
+            'Missing': 'Unknown',
+            '': 'Unknown'
+        }
+
+    data['Insurance Type'] = data['Insurance Type'].replace(insurance_corrections)
+
     # Clean and bin 'Total Household Gross Monthly Income'
     if 'Total Household Gross Monthly Income' in data.columns:
         # Convert to numeric
