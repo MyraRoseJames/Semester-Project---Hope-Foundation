@@ -32,8 +32,8 @@ def clean_data():
     if data.shape[1] > 31:
         data.drop(data.columns[[30, 31]], axis=1, inplace=True)
 
-    if 'Location' in data.columns:
-        data['Location'] = data['Location'].str.strip().str.title()
+    if 'Pt City' in data.columns:
+        data['Pt City'] = data['Pt City'].str.strip().str.title()
 
     # Replace non-informative entries with NaN
     data.replace({
