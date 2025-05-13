@@ -1,5 +1,6 @@
 import streamlit as st
 import pandas as pd
+import plotly.express as px
 from data_cleaning import clean_data
 
 # Clean data
@@ -60,8 +61,6 @@ elif page == "Support Breakdown":
 
     # Display the formatted support breakdown
     st.write(support_by_gender)
-
-import plotly.express as px
 
 elif page == "Time to Provide Support":
     st.title("Time to Provide Support")
