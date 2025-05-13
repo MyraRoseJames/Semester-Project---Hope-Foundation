@@ -159,6 +159,8 @@ elif page == "Unused Grant Amounts":
     st.write(cleaned_data['Remaining Balance'].dropna().head(10))
     st.write("Count of values > 0:")
     st.write((cleaned_data['Remaining Balance'] > 0).sum())
+    st.write(cleaned_data['Remaining Balance'].dropna().head(10))
+
 
     # Drop rows with missing values in Amount or Remaining Balance
     unused_data = cleaned_data.dropna(subset=["Amount", "Remaining Balance"])
