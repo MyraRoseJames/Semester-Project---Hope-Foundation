@@ -28,6 +28,10 @@ def clean_data():
     # Clean column names
     data.columns = data.columns.str.strip()
 
+     # Drop empty columns 30 and 31 if they exist
+    if data.shape[1] > 31:
+        data.drop(data.columns[[30, 31]], axis=1, inplace=True)
+
     # Replace non-informative entries with NaN
     data.replace({
         'Missing': pd.NA,
