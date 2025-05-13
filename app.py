@@ -12,7 +12,7 @@ page = st.sidebar.radio("Select a page:", ["Data Preview", "Applications Ready f
 # Display the page based on selection
 if page == "Data Preview":
     st.title("Hope Foundation Dashboard")
-    st.write("This app displays cleaned data for the Hope Foundation.")
+    st.write("Cleaned data for the Hope Foundation")
     st.header("Data Preview")
     st.write(cleaned_data.head())  # Show the cleaned data
 
@@ -87,26 +87,28 @@ elif page == "Time to Provide Support":
 elif page == "Unused Grant Amounts":
     st.title("Unused Grant Amounts")
 
-    # Drop rows where either field is missing
-    unused_data = cleaned_data.dropna(subset=["Amount", "Remaining Balance"])
+    # Drop rows with missing values in the relevant fields
+    unused_data = cleaned_data.dropna(subset=[" Amount ", " Remaining Balance "])
 
-    # Filter where remaining balance > 0
-    unused_grants = unused_data[unused_data["Remaining Balance"] > 0]
+    # Filter to only those with a remaining balance > 0
+    unused_grants = unused_data[unused_data[" Remaining Balance "] > 0]
 
-    # Calculate number and percent
+    # Count and calculate percentage
     num_unused = len(unused_grants)
     total = len(unused_data)
     percent_unused = (num_unused / total) * 100 if total > 0 else 0
 
+    # Calculate average remaining balance
+    avg_remaining = unused_grants[" Remaining Balance "].mean()
+
+    # Display metrics
     st.metric("Total Applications with Unused Grants", f"{num_unused}")
     st.metric("Percentage of Grants Unused", f"{percent_unused:.2f}%")
-
-    # Average remaining balance
-    avg_remaining = unused_grants["Remaining Balance"].mean()
     st.metric("Average Remaining Balance", f"${avg_remaining:,.2f}")
 
+    # Display data table
     st.subheader("Details of Unused Grants")
-    st.dataframe(unused_grants[["Amount", "Remaining Balance", "Gender", "City", "Insurance Type"]])
+    st.dataframe(unused_grants[[" Amount ", " Remaining Balance ", "Gender", "Pt City", "Insurance Type"]])
 
 elif page == "Summary of Impact and Progress":
     st.title("Summary of Impact and Progress")
