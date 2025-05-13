@@ -154,9 +154,6 @@ elif page == "Time to Provide Support":
 elif page == "Unused Grant Amounts":
     st.title("Unused Grant Amounts")
 
-    st.write("Sample Remaining Balance values:")
-    st.write(cleaned_data['Remaining Balance'].dropna().head(10))
-
     # Drop rows with missing values in Amount or Remaining Balance
     unused_data = cleaned_data.dropna(subset=["Amount", "Remaining Balance"])
 
