@@ -83,7 +83,7 @@ elif page == "Time to Provide Support":
     cleaned_data['temp_payment_submitted'] = cleaned_data.apply(process_payment_date, axis=1)
 
     # Now calculate the time to provide support in days
-    def calculate_time_to_support(row):
+    def calculate_days_to_support(row):
         # If 'temp_payment_submitted' is NaT or 'No', return NaT
         if pd.isna(row['temp_payment_submitted']):
             return pd.NaT
@@ -94,10 +94,10 @@ elif page == "Time to Provide Support":
         return (row['temp_payment_submitted'] - row['Grant Req Date']).days
 
     # Apply the time calculation
-    cleaned_data['time_to_support'] = cleaned_data.apply(calculate_time_to_support, axis=1)
+    cleaned_data['days_to_support'] = cleaned_data.apply(calculate_days_to_support, axis=1)
 
     # Calculate average time to provide support (ignoring NaT)
-    avg_time = cleaned_data['time_to_support'].mean()
+    avg_time = cleaned_data['days_to_support'].mean()
 
     # Display the average time
     st.write(f"Average time to provide support: {avg_time:.2f} days")
@@ -142,7 +142,7 @@ elif page == "Summary of Impact and Progress":
     avg_award = cleaned_data["Amount"].mean()
 
     # Average time to provide support (calculated in your data_cleaning.py)
-    avg_support_time = cleaned_data["time_to_support"].mean()
+    avg_support_time = cleaned_data["days_to_support"].mean()
 
     # Number of unique cities served
     num_cities = cleaned_data["Pt City"].nunique()
