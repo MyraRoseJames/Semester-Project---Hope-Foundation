@@ -111,7 +111,7 @@ def clean_data():
     # Replace non-informative entries with NaN
     data.replace({
         'Missing': pd.NA,
-        'Pending': pd.NA,
+        #'Pending': pd.NA, took out later, need for ready to review
         'Waiting on next statement': pd.NA,
         '': pd.NA
     }, inplace=True)
