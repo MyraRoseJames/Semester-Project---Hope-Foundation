@@ -29,6 +29,9 @@ def clean_data():
 
     # Clean column names
     data.columns = data.columns.str.strip()
+    
+    if 'Request Status' in data.columns:
+        data['Request Status'] = data['Request Status'].astype(str).str.strip().str.title()
 
     # Clean and standardize Insurance Type
     if 'Insurance Type' in data.columns:
