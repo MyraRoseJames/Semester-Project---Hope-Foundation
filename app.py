@@ -9,12 +9,30 @@ cleaned_data = clean_data()
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Select a page:", ["Data Preview", "Applications Ready for Review", "Support Breakdown", "Time to Provide Support", "Unused Grant Amounts", "Summary of Impact and Progress"])
 
-# Display the page based on selection
-if page == "Data Preview":
+elif page == "Data Preview":
     st.title("Hope Foundation Dashboard")
-    st.write("Cleaned data for the Hope Foundation")
-    st.header("Data Preview")
-    st.write(cleaned_data.head())  # Show the cleaned data
+    st.subheader("Cleaned Data Preview")
+
+    # Show shape and column names
+    st.markdown(f"**Dataset shape:** {cleaned_data.shape[0]} rows × {cleaned_data.shape[1]} columns")
+    st.markdown("**Column names:**")
+    st.write(cleaned_data.columns.tolist())
+
+    # Show sample of the data
+    st.subheader("Sample of Cleaned Data")
+    st.dataframe(cleaned_data.head(10))
+
+    # Null value count
+    st.subheader("Missing Values by Column")
+    st.dataframe(cleaned_data.isnull().sum().reset_index().rename(columns={
+        'index': 'Column', 0: 'Missing Values'
+    }))
+
+    # Data types
+    st.subheader("Column Data Types")
+    st.dataframe(cleaned_data.dtypes.reset_index().rename(columns={
+        'index': 'Column', 0: 'Data Type'
+    }))
 
 elif page == "Data Information":
     st.title("Data Information")
