@@ -1,6 +1,6 @@
-import pandas as pd
 import streamlit as st
-from data_cleaning import clean_data  # Import the cleaning function
+import pandas as pd
+from data_cleaning import clean_data
 
 # Clean data
 cleaned_data = clean_data()
