@@ -50,8 +50,8 @@ elif page == "Applications Ready for Review":
     ready_for_review = cleaned_data[cleaned_data['Application Signed?'] == 'Yes']
     st.write(ready_for_review)
 
-elif page == "Support Breakdown by Demographics":
-    st.title("Support Breakdown by Demographics")
+elif page == "Support Breakdown":
+    st.title("Support Breakdown")
 
     # Ensure Amount is numeric
     cleaned_data['Amount'] = pd.to_numeric(cleaned_data['Amount'], errors='coerce')
