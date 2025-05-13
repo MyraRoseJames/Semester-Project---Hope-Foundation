@@ -153,14 +153,8 @@ elif page == "Time to Provide Support":
 
 elif page == "Unused Grant Amounts":
     st.title("Unused Grant Amounts")
-    st.subheader("Debug: Remaining Balance Summary")
-    st.write("Data type:", cleaned_data['Remaining Balance'].dtype)
-    st.write("First 10 values (non-null):")
-    st.write(cleaned_data['Remaining Balance'].dropna().head(10))
-    st.write("Count of values > 0:")
-    st.write((cleaned_data['Remaining Balance'] > 0).sum())
-    st.write(cleaned_data['Remaining Balance'].dropna().head(10))
-
+    st.write("All non-zero Remaining Balance values:")
+    st.write(cleaned_data[cleaned_data['Remaining Balance'] != 0][['Patient ID#', 'Remaining Balance']])
 
     # Drop rows with missing values in Amount or Remaining Balance
     unused_data = cleaned_data.dropna(subset=["Amount", "Remaining Balance"])
