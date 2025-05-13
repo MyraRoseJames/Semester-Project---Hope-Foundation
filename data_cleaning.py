@@ -57,4 +57,8 @@ def clean_data():
     data['Payment Submitted?'] = data.apply(process_payment_date, axis=1)
     data['time_to_support'] = data.apply(calculate_time_to_support, axis=1)
 
-    return data
+     # Save cleaned data
+    data.to_csv('cleaned_data.csv', index=False)
+
+if __name__ == "__main__":
+    clean_data()
