@@ -65,44 +65,49 @@ elif page == "Support Breakdown":
 elif page == "Time to Provide Support":
     st.title("Time to Provide Support")
 
-    # Filter for rows with valid support times and request dates
     support_data = cleaned_data.dropna(subset=['days_to_support', 'Grant Req Date'])
 
-    # Extract year and month from the grant request date
+    # Extract year and month from grant request date
     support_data['Request Year'] = support_data['Grant Req Date'].dt.year
     support_data['Request Month'] = support_data['Grant Req Date'].dt.strftime('%Y-%m')
 
-    # Overall average support time
+    # Average time overall
     avg_time = support_data['days_to_support'].mean()
     st.metric("Average Time to Provide Support", f"{avg_time:.2f} days")
 
-    # Group by year
+    # Grouped averages
     avg_by_year = support_data.groupby('Request Year')['days_to_support'].mean().reset_index()
-
-    # Group by month
     avg_by_month = support_data.groupby('Request Month')['days_to_support'].mean().reset_index()
 
-    # Plot: Yearly average
+    # Charts
     fig_year = px.line(
         avg_by_year,
         x='Request Year',
         y='days_to_support',
-        title='Average Time to Provide Support by Year',
+        title='Yearly Support Time',
         markers=True,
         labels={'days_to_support': 'Avg Days to Support'}
     )
-    st.plotly_chart(fig_year, use_container_width=True)
 
-    # Plot: Monthly average
     fig_month = px.line(
         avg_by_month,
         x='Request Month',
         y='days_to_support',
-        title='Average Time to Provide Support by Month',
+        title='Monthly Support Time',
         markers=True,
         labels={'days_to_support': 'Avg Days to Support'}
     )
-    st.plotly_chart(fig_month, use_container_width=True)
+
+    # 🔀 Add tabs
+    tab1, tab2 = st.tabs(["By Year", "By Month"])
+
+    with tab1:
+        st.subheader("Average Time to Support by Year")
+        st.plotly_chart(fig_year, use_container_width=True)
+
+    with tab2:
+        st.subheader("Average Time to Support by Month")
+        st.plotly_chart(fig_month, use_container_width=True)
 
 elif page == "Unused Grant Amounts":
     st.title("Unused Grant Amounts")
