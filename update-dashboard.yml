@@ -1,9 +1,14 @@
-name: Update Dashboard on Data Push
+name: Update Dashboard monthly, use yml
 
 on:
   push:
     paths:
       - 'data.csv'
+    branches:
+      - main
+
+  schedule:
+    - cron: '0 5 1 * *'  # 5:00 AM UTC ( 12AM Central time) on the 1st of every month
 
 jobs:
   update:
