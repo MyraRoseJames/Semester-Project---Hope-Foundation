@@ -87,6 +87,12 @@ elif page == "Time to Provide Support":
 elif page == "Unused Grant Amounts":
     st.title("Unused Grant Amounts")
 
+    # Drop rows with missing values in Amount or Remaining Balance
+    unused_data = cleaned_data.dropna(subset=["Amount", "Remaining Balance"])
+
+    # Filter where Remaining Balance > 0
+    unused_grants = unused_data[unused_data["Remaining Balance"] > 0]
+
      # Count and percentage
     num_unused = len(unused_grants)
     total = len(unused_data)
