@@ -29,6 +29,11 @@ def clean_data():
 
     # Clean column names
     data.columns = data.columns.str.strip()
+
+    # Convert Remaining Balance to numeric
+    if 'Remaining Balance' in data.columns:
+        data['Remaining Balance'] = pd.to_numeric(data['Remaining Balance'], errors='coerce')
+
     
     if 'Request Status' in data.columns:
         data['Request Status'] = data['Request Status'].astype(str).str.strip().str.title()
