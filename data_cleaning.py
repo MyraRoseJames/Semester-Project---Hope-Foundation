@@ -33,7 +33,7 @@ def clean_data():
         data.drop(data.columns[[30, 31]], axis=1, inplace=True)
 
     if 'Location' in data.columns:
-    data['Location'] = data['Location'].str.strip().str.title()
+        data['Location'] = data['Location'].str.strip().str.title()
 
     # Replace non-informative entries with NaN
     data.replace({
