@@ -74,11 +74,15 @@ elif page == "Support Breakdown":
         st.write(support_by_city)
 
     with income_tab:
-        st.subheader("Support by Income Range")
+        st.subheader("Support by Income Range (including missing)")
 
         if 'Income Range' in cleaned_data.columns:
-            support_by_income_range = cleaned_data.groupby('Income Range')['Amount'].sum().sort_index()
-            support_by_income_range = support_by_income_range.apply(lambda x: f"${x:,.2f}")
+            support_by_income_range = (
+                cleaned_data.groupby('Income Range')['Amount']
+                .sum()
+                .reindex(['< $2,000', '$2,000–3,999', '$4,000–5,999', '$6,000–7,999', '$8,000+', 'Missing'])
+            )
+            support_by_income_range = support_by_income_range.fillna(0).apply(lambda x: f"${x:,.2f}")
             st.write(support_by_income_range)
         else:
             st.warning("Income Range column not found.")
