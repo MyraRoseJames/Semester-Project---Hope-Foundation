@@ -74,14 +74,14 @@ elif page == "Support Breakdown":
         st.write(support_by_city)
 
     with income_tab:
-        st.subheader("Support by Total Household Gross Monthly Income")
-    
-        income_col = 'Total Household Gross Monthly Income'
+        st.subheader("Support by Income Range")
 
-        if income_col in cleaned_data.columns:
-            support_by_income = cleaned_data.groupby(income_col)['Amount'].sum().sort_values(ascending=False)
-            support_by_income = support_by_income.apply(lambda x: f"${x:,.2f}")
-            st.write(support_by_income)
+        if 'Income Range' in cleaned_data.columns:
+            support_by_income_range = cleaned_data.groupby('Income Range')['Amount'].sum().sort_index()
+            support_by_income_range = support_by_income_range.apply(lambda x: f"${x:,.2f}")
+            st.write(support_by_income_range)
+        else:
+            st.warning("Income Range column not found.")
 
     with insurance_tab:
         st.subheader("Support by Insurance Type")
