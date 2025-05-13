@@ -9,7 +9,7 @@ cleaned_data = clean_data()
 st.sidebar.title("Navigation")
 page = st.sidebar.radio("Select a page:", ["Data Preview", "Applications Ready for Review", "Support Breakdown", "Time to Provide Support", "Unused Grant Amounts", "Summary of Impact and Progress"])
 
-elif page == "Data Preview":
+if page == "Data Preview":
     st.title("Hope Foundation Dashboard")
     st.subheader("Cleaned Data Preview")
 
