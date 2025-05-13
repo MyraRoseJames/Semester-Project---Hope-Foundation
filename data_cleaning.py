@@ -52,6 +52,8 @@ def clean_data():
 
     data['Insurance Type'] = data['Insurance Type'].replace(insurance_corrections)
 
+    data['Insurance Type'] = data['Insurance Type'].fillna('Unknown') #for the missing values
+
     # Clean and bin 'Total Household Gross Monthly Income'
     if 'Total Household Gross Monthly Income' in data.columns:
         # Convert to numeric
