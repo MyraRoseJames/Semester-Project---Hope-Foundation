@@ -9,15 +9,15 @@ def process_payment_date(row):
     return pd.to_datetime(row['Payment Submitted?'], errors='coerce')  # Otherwise, parse date
 
 # Helper function: calculate days from grant request to payment
-def calculate_time_to_support(row):
+def calculate_days_to_support(row):
     grant_req_date = row['Grant Req Date']
-    payment_submitted = row['Payment Submitted?']
+    parsed_payment = row['_parsed_payment_date']
 
-    if pd.isna(payment_submitted):
+    if pd.isna(parsed_payment):
         return pd.NA
-    if payment_submitted == pd.Timedelta(days=1):
+    if parsed_payment == pd.Timedelta(days=1):
         return 1
-    return (payment_submitted - grant_req_date).days
+    return (parsed_payment - grant_req_date).days
 
 # Main cleaning function
 def clean_data():
@@ -28,7 +28,7 @@ def clean_data():
     # Clean column names
     data.columns = data.columns.str.strip()
 
-     # Drop empty columns 30 and 31 if they exist
+    # Drop empty columns 30 and 31 if they exist
     if data.shape[1] > 31:
         data.drop(data.columns[[30, 31]], axis=1, inplace=True)
 
@@ -60,28 +60,17 @@ def clean_data():
     # Create a new temporary column with parsed dates for calculation
     data['_parsed_payment_date'] = data.apply(process_payment_date, axis=1)
 
-    # Use the parsed date to compute days to support
-    def calculate_days_to_support(row):
-        grant_req_date = row['Grant Req Date']
-        parsed_payment = row['_parsed_payment_date']
+    # Compute days to support
+    data['days_to_support'] = data.apply(calculate_days_to_support, axis=1)
 
-    if pd.isna(parsed_payment):
-        return pd.NA
-    if parsed_payment == pd.Timedelta(days=1):
-        return 1
-    return (parsed_payment - grant_req_date).days
+    # Drop the temporary column
+    data.drop(columns=['_parsed_payment_date'], inplace=True)
 
-data['days_to_support'] = data.apply(calculate_days_to_support, axis=1)
-
-# Drop the temporary column
-data.drop(columns=['_parsed_payment_date'], inplace=True)
-
-
-     # Save cleaned data
+    # Save cleaned data
     data.to_csv('cleaned_data.csv', index=False)
 
     return data
 
 # Run the cleaning when the file is executed directly
 if __name__ == "__main__":
-    clean_data()  
+    clean_data()
