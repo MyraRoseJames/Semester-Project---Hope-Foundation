@@ -74,13 +74,14 @@ elif page == "Support Breakdown":
         st.write(support_by_city)
 
     with income_tab:
-        st.subheader("Support by Income Size")
-        if 'Income Size' in cleaned_data.columns:
-            support_by_income = cleaned_data.groupby('Income Size')['Amount'].sum().sort_values(ascending=False)
-            support_by_income = support_by_income.apply(lambda x: f"${x:,.2f}")
-            st.write(support_by_income)
-        else:
-            st.warning("Income Size column not found.")
+        st.subheader("Support by Total Household Gross Monthly Income")
+    
+        income_col = 'Total Household Gross Monthly Income'
+
+        if income_col in cleaned_data.columns:
+        support_by_income = cleaned_data.groupby(income_col)['Amount'].sum().sort_values(ascending=False)
+        support_by_income = support_by_income.apply(lambda x: f"${x:,.2f}")
+        st.write(support_by_income)
 
     with insurance_tab:
         st.subheader("Support by Insurance Type")
@@ -88,8 +89,6 @@ elif page == "Support Breakdown":
             support_by_insurance = cleaned_data.groupby('Insurance Type')['Amount'].sum().sort_values(ascending=False)
             support_by_insurance = support_by_insurance.apply(lambda x: f"${x:,.2f}")
             st.write(support_by_insurance)
-        else:
-            st.warning("Insurance Type column not found.")
 
     with age_tab:
         st.subheader("Support by Age Group")
@@ -100,8 +99,6 @@ elif page == "Support Breakdown":
             support_by_age = cleaned_data.groupby('Age Group')['Amount'].sum().sort_values(ascending=False)
             support_by_age = support_by_age.apply(lambda x: f"${x:,.2f}")
             st.write(support_by_age)
-        else:
-            st.warning("Age column not found.")
 
 elif page == "Time to Provide Support":
     st.title("Time to Provide Support")
