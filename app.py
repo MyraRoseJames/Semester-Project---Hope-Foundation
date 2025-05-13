@@ -50,17 +50,58 @@ elif page == "Applications Ready for Review":
     ready_for_review = cleaned_data[cleaned_data['Application Signed?'] == 'Yes']
     st.write(ready_for_review)
 
-elif page == "Support Breakdown":
+elif page == "Support Breakdown by Demographics":
     st.title("Support Breakdown by Demographics")
 
-    # Group by 'Gender' and calculate the total 'Amount'
-    support_by_gender = cleaned_data.groupby('Gender')['Amount'].sum()
+    # Ensure Amount is numeric
+    cleaned_data['Amount'] = pd.to_numeric(cleaned_data['Amount'], errors='coerce')
 
-    # Format the 'Amount' to include commas and dollar signs
-    support_by_gender = support_by_gender.apply(lambda x: f"${x:,.2f}")  # Format with commas and dollar sign
+    # Set up tabs for each demographic
+    gender_tab, location_tab, income_tab, insurance_tab, age_tab = st.tabs([
+        "By Gender", "By Location", "By Income Size", "By Insurance Type", "By Age"
+    ])
 
-    # Display the formatted support breakdown
-    st.write(support_by_gender)
+    with gender_tab:
+        st.subheader("Support by Gender")
+        support_by_gender = cleaned_data.groupby('Gender')['Amount'].sum().sort_values(ascending=False)
+        support_by_gender = support_by_gender.apply(lambda x: f"${x:,.2f}")
+        st.write(support_by_gender)
+
+    with location_tab:
+        st.subheader("Support by Location (Pt City)")
+        support_by_city = cleaned_data.groupby('Pt City')['Amount'].sum().sort_values(ascending=False)
+        support_by_city = support_by_city.apply(lambda x: f"${x:,.2f}")
+        st.write(support_by_city)
+
+    with income_tab:
+        st.subheader("Support by Income Size")
+        if 'Income Size' in cleaned_data.columns:
+            support_by_income = cleaned_data.groupby('Income Size')['Amount'].sum().sort_values(ascending=False)
+            support_by_income = support_by_income.apply(lambda x: f"${x:,.2f}")
+            st.write(support_by_income)
+        else:
+            st.warning("Income Size column not found.")
+
+    with insurance_tab:
+        st.subheader("Support by Insurance Type")
+        if 'Insurance Type' in cleaned_data.columns:
+            support_by_insurance = cleaned_data.groupby('Insurance Type')['Amount'].sum().sort_values(ascending=False)
+            support_by_insurance = support_by_insurance.apply(lambda x: f"${x:,.2f}")
+            st.write(support_by_insurance)
+        else:
+            st.warning("Insurance Type column not found.")
+
+    with age_tab:
+        st.subheader("Support by Age Group")
+        if 'Age' in cleaned_data.columns:
+            # Optional: bin ages into groups
+            cleaned_data['Age Group'] = pd.cut(cleaned_data['Age'], bins=[0, 18, 30, 45, 60, 100], labels=[
+                '0–18', '19–30', '31–45', '46–60', '60+'])
+            support_by_age = cleaned_data.groupby('Age Group')['Amount'].sum().sort_values(ascending=False)
+            support_by_age = support_by_age.apply(lambda x: f"${x:,.2f}")
+            st.write(support_by_age)
+        else:
+            st.warning("Age column not found.")
 
 elif page == "Time to Provide Support":
     st.title("Time to Provide Support")
