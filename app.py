@@ -79,9 +79,9 @@ elif page == "Support Breakdown":
         income_col = 'Total Household Gross Monthly Income'
 
         if income_col in cleaned_data.columns:
-        support_by_income = cleaned_data.groupby(income_col)['Amount'].sum().sort_values(ascending=False)
-        support_by_income = support_by_income.apply(lambda x: f"${x:,.2f}")
-        st.write(support_by_income)
+            support_by_income = cleaned_data.groupby(income_col)['Amount'].sum().sort_values(ascending=False)
+            support_by_income = support_by_income.apply(lambda x: f"${x:,.2f}")
+            st.write(support_by_income)
 
     with insurance_tab:
         st.subheader("Support by Insurance Type")
