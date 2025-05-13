@@ -64,5 +64,6 @@ if __name__ == "__main__":
     clean_data()
 
     data.to_csv('cleaned_data.csv', index=False)
-    return data  # <--- this line is critical
+
+    return data
 
