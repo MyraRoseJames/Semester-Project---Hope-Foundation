@@ -99,6 +99,7 @@ def clean_data():
     
     city_corrections = {
         'Omahaa': 'Omaha',
+        'Omaha,': 'Omaha',
         'Omha': 'Omaha',
         'OmAha': 'Omaha',
         'O maha': 'Omaha',
