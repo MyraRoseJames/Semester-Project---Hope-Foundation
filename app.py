@@ -8,7 +8,27 @@ cleaned_data = clean_data()
 
 # Sidebar navigation
 st.sidebar.title("Navigation")
-page = st.sidebar.radio("Select a page:", ["Data Preview", "Applications Ready for Review", "Support Breakdown", "Time to Provide Support", "Unused Grant Amounts", "Summary of Impact and Progress"])
+page = st.sidebar.radio("Select a page:", ["Home", "Data Preview", "Applications Ready for Review", "Support Breakdown", "Time to Provide Support", "Unused Grant Amounts", "Summary of Impact and Progress"])
+
+if page == "Home":
+    st.title("Hope Foundation Dashboard")
+    st.markdown("""
+    Welcome to the **Hope Foundation Dashboard**!
+
+    This dashboard is designed to help the Nebraska Cancer Specialists Hope Foundation 
+    visualize and track grant applications submitted by patients.
+
+    ### What You’ll Find Here:
+    - **Data Preview**: A raw look at the cleaned dataset.
+    - **Applications Ready for Review**: Filter and view applications based on signature status.
+    - **Summary of Impact and Progress**: High-level statistics and insights from the past year.
+    - **Unused Grant Amounts**: Identify and analyze remaining grant funds.
+
+    ### How to Use:
+    Use the sidebar to navigate between pages and apply filters on select views.
+    ---
+    _Developed as part of a semester project for Econ 8320 - Tools for Data Analysis._
+    """)
 
 if page == "Data Preview":
     st.title("Hope Foundation Dashboard")
