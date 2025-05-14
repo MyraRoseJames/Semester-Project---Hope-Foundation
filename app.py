@@ -44,11 +44,38 @@ elif page == "Data Information":
     st.write("Data Types per Column:")
     st.write(cleaned_data.dtypes)  # Show data types for each column
 
+#elif page == "Applications Ready for Review":
+    #st.title("Applications Ready for Review")
+    # Assuming a column called 'signed' to filter applications
+   # ready_for_review = cleaned_data[cleaned_data['Application Signed?'] == 'Yes']
+    #st.write(ready_for_review)
+
 elif page == "Applications Ready for Review":
     st.title("Applications Ready for Review")
-    # Assuming a column called 'signed' to filter applications
-    ready_for_review = cleaned_data[cleaned_data['Application Signed?'] == 'Yes']
-    st.write(ready_for_review)
+
+    if 'Application Signed?' in cleaned_data.columns:
+        # Normalize the column to handle inconsistencies
+        cleaned_data['Application Signed?'] = cleaned_data['Application Signed?'].astype(str).str.strip().str.lower()
+
+        # Filter option in sidebar or main page
+        signed_filter = st.radio(
+            "Filter by Signed Status:",
+            ("All", "Signed Only", "Unsigned Only"),
+            index=0
+        )
+
+        # Apply the selected filter
+        if signed_filter == "Signed Only":
+            filtered_data = cleaned_data[cleaned_data['Application Signed?'] == 'yes']
+        elif signed_filter == "Unsigned Only":
+            filtered_data = cleaned_data[cleaned_data['Application Signed?'] != 'yes']
+        else:
+            filtered_data = cleaned_data
+
+        st.write(filtered_data)
+        st.markdown(f"**Total Applications Displayed:** {len(filtered_data)}")
+    else:
+        st.warning("The column 'Application Signed?' is not in the dataset.")
 
 elif page == "Support Breakdown":
     st.title("Support Breakdown")
