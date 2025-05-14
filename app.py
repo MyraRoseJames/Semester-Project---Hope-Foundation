@@ -27,7 +27,7 @@ if page == "Home":
     ### How to Use:
     Use the sidebar to navigate between pages and apply filters on select views.
     ---
-    _Developed as part of a semester project for Econ 8320 - Tools for Data Analysis._
+    _Developed by Myra James as part of a semester project for Econ 8320 - Tools for Data Analysis._
     """)
 
 if page == "Data Preview":
