@@ -21,7 +21,7 @@ def calculate_days_to_support(row):
         return 1
     return (parsed_payment - grant_req_date).days
 
-# Main cleaning function
+# MAIN CLEANING FUNCTION
 def clean_data():
     # Load data from GitHub
     file_path = 'https://github.com/MyraRoseJames/Semester-Project---Hope-Foundation/raw/refs/heads/main/data.csv'
@@ -95,8 +95,7 @@ def clean_data():
         today = pd.to_datetime(datetime.today().date())
         data['Age'] = (today - data['DOB']).dt.days // 365
 
-
-    # Drop empty columns 30 and 31 if they exist
+    # Drop empty columns 30 and 31, not sure why this was happening
     if data.shape[1] > 31:
         data.drop(data.columns[[30, 31]], axis=1, inplace=True)
 
