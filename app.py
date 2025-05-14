@@ -140,7 +140,7 @@ elif page == "Time to Provide Support":
         labels={'days_to_support': 'Avg Days to Support'}
     )
 
-    # 🔀 Add tabs
+    # Add tabs
     tab1, tab2 = st.tabs(["By Year", "By Month"])
 
     with tab1:
